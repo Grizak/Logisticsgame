@@ -1,0 +1,105 @@
+<h2>Cities</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>X Coordinate</th>
+        <th>Y Coordinate</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% cities.forEach(city => { %>
+        <tr>
+          <td><%= city.name %></td>
+          <td><%= city.x %></td>
+          <td><%= city.y %></td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+<h2>Vehicles</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Speed</th>
+      <th>Capacity</th>
+      <th>Fuel Cost</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% vehicles.forEach(vehicle => { %>
+      <tr>
+        <td><%= vehicle.type %></td>
+        <td><%= vehicle.speed %> km/h</td>
+        <td><%= vehicle.capacity %> tonns</td>
+        <td><%= vehicle.fuelCost %> SEK</td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
+<div class="container">
+  <h2>Create a Route</h2>
+  <form action="/create/route" method="POST">
+    <div class="form-group">
+      <label for="startCity">Start City:</label>
+      <select id="startCity" name="startCityId" required>
+        <option>Choose a city</option>
+        <% cities.forEach(city => { %>
+          <option value="<%= city._id %>"><%= city.name %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="endCity">End City:</label>
+      <select id="endCity" name="endCityId" required>
+        <option>Choose a city</option>
+        <% cities.forEach(city => { %>
+          <option value="<%= city._id %>"><%= city.name %></option>
+        <% }) %>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="vehicle">Vehicle:</label>
+      <select id="vehicle" name="vehicleId" required>
+        <option>Choose a vehicle</option>
+        <% vehicles.forEach(vehicle => { %>
+          <option value="<%= vehicle._id %>"><%= vehicle.type %> (<%= vehicle.speed %> km/h <%= vehicle.fuelCost %> kr)</option>
+        <% }) %>
+      </select>
+    </div>
+
+    <button type="submit">Create Route</button>
+  </form>
+</div>
+
+    <h2>Routes</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>From</th>
+          <th>To</th>
+          <th>Vehicle</th>
+          <th>Distance</th>
+          <th>Cost</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% routes.forEach(route => { %>
+          <tr>
+            <td><%= route.startCity.name %></td>
+            <td><%= route.endCity.name %></td>
+            <td><%= route.vehicle.type %></td>
+            <td><%= route.distance.toFixed(2) %> km</td>
+            <td><%= route.cost.toFixed(2) %> SEK</td>
+            <td><%= route.timeInMinutes %> min</td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+    

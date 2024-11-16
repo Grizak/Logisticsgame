@@ -1,0 +1,22 @@
+<h2>Vehicles</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Type</th>
+      <th>Speed</th>
+      <th>Capacity</th>
+      <th>Fuel Cost</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% vehicles.forEach(vehicle => { %>
+      <tr>
+        <td><%= vehicle.type %></td>
+        <td><%= vehicle.speed %> km/h</td>
+        <td><%= vehicle.capacity %> tonns</td>
+        <td><%= vehicle.fuelCost %> kr</td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+
