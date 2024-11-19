@@ -113,14 +113,48 @@ router.post('/vehicle', async (req, res) => {
   }
 });
 
+const formatTime = (timeInMinutes) => {
+  const hours = Math.floor(timeInMinutes / 60); // Calculate whole hours
+  const minutes = Math.floor(timeInMinutes % 60); // Get remaining minutes
+  const seconds = Math.round((timeInMinutes - Math.floor(timeInMinutes)) * 60); // Get remaining seconds
+
+  let result = '';
+  if (hours > 0) result += `${hours} hours `;
+  if (minutes > 0 || hours > 0) result += `${minutes} minutes `;
+  result += `${seconds} seconds`;
+
+  return result.trim();
+};
+
+const calculateRevenue = (distance, load, vehicle, totalCost) => {
+  if (!distance || !load || !vehicle || !vehicle.capacity) {
+      console.error("Invalid inputs for revenue calculation", { distance, load, vehicle });
+      return NaN;
+  }
+
+  const basePricePerKm = 5; // Example base price
+  const loadFactor = load / vehicle.capacity;
+
+  // Ensure loadFactor is within valid range
+  if (loadFactor < 0 || loadFactor > 1) {
+      console.error("Invalid load factor", { loadFactor });
+      return NaN;
+  }
+
+  return (basePricePerKm * distance * loadFactor) - totalCost;
+};
+
 // Route creation endpoint
 router.post('/route', async (req, res) => {
-  const { startCityId, endCityId, vehicleId, load } = req.body;
+  console.log("Request body:", req.body)
+  const { startCityId, endCityId, vehicleId } = req.body;
 
   try {
     const startCity = await City.findById(startCityId);
     const endCity = await City.findById(endCityId);
     const vehicle = await Vehicle.findById(vehicleId);
+
+    const load = vehicle.regularLoad;
 
     if (!startCity || !endCity || !vehicle) {
       return res.status(400).json({ error: "Invalid city or vehicle ID" });
@@ -135,18 +169,20 @@ router.post('/route', async (req, res) => {
     // Use the refined cost calculation function
     const { totalCost, timeInMinutes } = await calculateCost(startCity, endCity, vehicle, load);
 
+    const formattedTime = formatTime(timeInMinutes);
+    const revenue = calculateRevenue(distance, load, vehicle, totalCost || distance * vehicle.fuelCost);
+
     const newRoute = new Route({
       startCity: startCity._id,
       endCity: endCity._id,
       vehicle: vehicle._id,
       distance,
       cost: totalCost || distance * vehicle.fuelCost,  // Fallback to basic calculation if full cost fails
-      timeInMinutes  // Add time taken to the route data
+      timeInMinutes: formattedTime,  // Add time taken to the route data
+      revenue
     });
 
     await newRoute.save();
-
-    console.log(newRoute);
 
     res.redirect('/game');
   } catch (err) {

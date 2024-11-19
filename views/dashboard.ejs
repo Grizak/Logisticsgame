@@ -87,6 +87,7 @@
           <th>Distance</th>
           <th>Cost</th>
           <th>Time</th>
+          <th>Revenue</th>
         </tr>
       </thead>
       <tbody>
@@ -97,7 +98,8 @@
             <td><%= route.vehicle.type %></td>
             <td><%= route.distance.toFixed(2) %> km</td>
             <td><%= route.cost.toFixed(2) %> SEK</td>
-            <td><%= route.timeInMinutes %> min</td>
+            <td><%= route.timeInMinutes %></td>
+            <td><%= route.revenue %> SEK</td>
           </tr>
         <% }) %>
       </tbody>

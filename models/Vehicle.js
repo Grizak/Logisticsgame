@@ -29,6 +29,10 @@ const vehicleSchema = new mongoose.Schema({
     timeCostPerHour: {
         type: Number,
         required: true,  // Time-based cost per hour of travel
+    },
+    regularLoad: {
+        type: Number,
+        required: true
     }
 });
 

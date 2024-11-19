@@ -26,6 +26,10 @@ const routeSchema = new mongoose.Schema({
         required: true
     },
     timeInMinutes: {
+        type: String,
+        required: true
+    },
+    revenue: {
         type: Number,
         required: true
     }
